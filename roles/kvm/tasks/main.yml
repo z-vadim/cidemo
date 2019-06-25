@@ -1,0 +1,15 @@
+---
+
+- name: Create VM data dir
+  file: "state=directory path={{vm_data_dir}}/{{vm_name}} force=yes mode=0777"
+  become: yes
+  delegate_to: "{{kvm_host}}"
+
+- name: KVM install
+  imports_tasks: install.yml
+
+- name: Deploy Base VM
+  import_tasks: deploy-vm.yml
+
+- name: KVM network
+  import_tasks: network.yml

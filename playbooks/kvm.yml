@@ -1,0 +1,6 @@
+- hosts: localhost
+  tasks:
+    - import_role:
+        name: kvm
+      vars:
+        kvm_vm_pool_dir: /opt

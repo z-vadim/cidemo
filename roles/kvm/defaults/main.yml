@@ -1,0 +1,21 @@
+kvm_vm_pool_dir: /var/lib/virt/images
+kvm_host: localhost
+
+vm_data_dir: /root/kvm/vms
+vm_recreate: true
+
+cloud_init_vm_image: CentOS-7-x86-64-GenericCloud.qcow2
+cloud_init_vm_image_link: "http://cloud.centos.org/centos/7/images/CentOS-7-x86_64-GenericCloud-1905.qcow2"
+
+
+cloud_init_user_data: "{{vm_data_dir}}/{{vm_name}}/user-data"
+cloud_init_meta_data: "{{vm_data_dir}}/{{vm_name}}/meta-data"
+cloud_init_iso_data: "{{vm_data_dir}}/{{vm_name}}/cidata.iso"
+
+vm_name: CentOS_Base
+vm_local_hostname: base.example.com
+vm_hostname: base.example.com
+
+vm_cpu: 2
+vm_memory: 2048
+vm_root_disk_size: 10G

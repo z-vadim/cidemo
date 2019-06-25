@@ -1,0 +1,29 @@
+---
+
+- name: Get mac
+  shell: >
+    virsh --connect qemu:///system dumpxml {{vm_name}} | awk -F\''/mac address/{print $2}'
+  become: yes
+  delegate_to: "{{kvm_install_host}}"
+  register: mac_info
+
+- name: Gather bridge device name
+  shell: >
+    virsh --connect qemu:///system net-info {{vm_network_br | default('default')}} | grep Bridge| awk '{print $2}'
+  become: yes
+  delegate_to: "{{kvm_install_host}}"
+  register: vm_network_br_dev_name
+
+- name: Wait for IP
+  wait_for:
+    path: "/var/lib/libvirt/dnsmasq/{{vm_network_br_dev_name.stdout}}.status"
+    search_regex: "{{mac_info.stdout}}"
+  become: yes
+  delegate_to: "{{kvm_install_host}}"
+
+- name: Gather IP
+  shell: >
+    grep -B1 {{mac_info.stdout}} /var/lib/libvirt/dnsmasq/{{vm_network_br_dev_name.stdout}}.status | head -n 1 | awk 'print $1'
+  register: vm_ip
+  become: yes
+  delegate_to: "{{kvm_install_host}}"
